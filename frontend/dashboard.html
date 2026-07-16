@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Fute Services — Lead Dashboard</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">Fute<span>Services</span></div>
+      <div class="nav-item active">📋 Leads Dashboard</div>
+      <div class="sidebar-footer" id="sidebarUser"></div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <h1>Lead Dashboard</h1>
+          <div class="muted">Buyer enquiries from your property listings.</div>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost" id="exportBtn">⬇ Export CSV</button>
+          <button class="btn btn-accent" id="addLeadBtn">+ Add Lead</button>
+          <button class="btn btn-ghost" id="logoutBtn">Log out</button>
+        </div>
+      </div>
+
+      <!-- Summary cards -->
+      <section class="summary-grid" id="summaryGrid">
+        <div class="stat-card total">
+          <div class="label">Total Leads</div>
+          <div class="value" id="statTotal">0</div>
+        </div>
+        <div class="stat-card s-new">
+          <div class="label">New</div>
+          <div class="value" id="statNew">0</div>
+        </div>
+        <div class="stat-card s-contacted">
+          <div class="label">Contacted</div>
+          <div class="value" id="statContacted">0</div>
+        </div>
+        <div class="stat-card s-visit">
+          <div class="label">Site Visit</div>
+          <div class="value" id="statVisit">0</div>
+        </div>
+        <div class="stat-card s-closed">
+          <div class="label">Closed</div>
+          <div class="value" id="statClosed">0</div>
+        </div>
+        <div class="stat-card s-lost">
+          <div class="label">Lost</div>
+          <div class="value" id="statLost">0</div>
+        </div>
+      </section>
+
+      <!-- Toolbar: search / filter / sort -->
+      <section class="toolbar">
+        <input type="text" id="searchInput" placeholder="Search by name or phone..." />
+        <select id="statusFilter">
+          <option value="">All statuses</option>
+          <option value="New">New</option>
+          <option value="Contacted">Contacted</option>
+          <option value="Site Visit Scheduled">Site Visit Scheduled</option>
+          <option value="Closed">Closed</option>
+          <option value="Lost">Lost</option>
+        </select>
+        <select id="unitFilter">
+          <option value="">All unit types</option>
+          <option value="2 BHK">2 BHK</option>
+          <option value="3 BHK">3 BHK</option>
+          <option value="Villa">Villa</option>
+        </select>
+        <select id="sortOrder">
+          <option value="desc">Newest first</option>
+          <option value="asc">Oldest first</option>
+        </select>
+        <div class="spacer"></div>
+        <button class="btn btn-ghost btn-sm" id="clearFiltersBtn">Clear filters</button>
+      </section>
+
+      <!-- Lead table -->
+      <section class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Lead</th>
+              <th>Contact</th>
+              <th>Interested Property</th>
+              <th>Unit Type</th>
+              <th>Budget</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="leadsTableBody">
+            <!-- rows injected by dashboard.js -->
+          </tbody>
+        </table>
+        <div class="empty-state hidden" id="emptyState">No leads match your current search/filter.</div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Add / Edit Lead Modal -->
+  <div class="modal-backdrop hidden" id="leadModalBackdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="leadModalTitle">Add Lead</h3>
+        <button class="modal-close" id="leadModalClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="formAlert" class="alert alert-error hidden"></div>
+        <form id="leadForm" novalidate>
+          <input type="hidden" id="leadId" />
+          <div class="form-grid">
+            <div class="field span-2">
+              <label for="fullName">Full Name</label>
+              <input type="text" id="fullName" />
+              <div class="field-error hidden" id="fullNameError"></div>
+            </div>
+            <div class="field">
+              <label for="leadEmail">Email</label>
+              <input type="email" id="leadEmail" />
+              <div class="field-error hidden" id="leadEmailError"></div>
+            </div>
+            <div class="field">
+              <label for="leadPhone">Phone Number</label>
+              <input type="text" id="leadPhone" />
+              <div class="field-error hidden" id="leadPhoneError"></div>
+            </div>
+            <div class="field span-2">
+              <label for="leadProperty">Interested Property</label>
+              <input type="text" id="leadProperty" placeholder="e.g. Green Valley Residency" />
+            </div>
+            <div class="field">
+              <label for="unitType">Unit Type</label>
+              <select id="unitType">
+                <option value="">Select unit type</option>
+                <option value="2 BHK">2 BHK</option>
+                <option value="3 BHK">3 BHK</option>
+                <option value="Villa">Villa</option>
+              </select>
+              <div class="field-error hidden" id="unitTypeError"></div>
+            </div>
+            <div class="field">
+              <label for="budget">Budget</label>
+              <input type="text" id="budget" placeholder="e.g. 85 Lakhs" />
+              <div class="field-error hidden" id="budgetError"></div>
+            </div>
+            <div class="field">
+              <label for="leadSource">Lead Source</label>
+              <select id="leadSource">
+                <option value="Website">Website</option>
+                <option value="Facebook">Facebook</option>
+                <option value="Referral">Referral</option>
+                <option value="Walk-in">Walk-in</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="status">Status</label>
+              <select id="status">
+                <option value="New">New</option>
+                <option value="Contacted">Contacted</option>
+                <option value="Site Visit Scheduled">Site Visit Scheduled</option>
+                <option value="Closed">Closed</option>
+                <option value="Lost">Lost</option>
+              </select>
+              <div class="field-error hidden" id="statusError"></div>
+            </div>
+            <div class="field">
+              <label for="followUpDate">Follow-up Date</label>
+              <input type="date" id="followUpDate" />
+            </div>
+            <div class="field span-2">
+              <label for="notes">Notes</label>
+              <textarea id="notes" rows="3"></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="leadCancelBtn">Cancel</button>
+        <button class="btn btn-primary" id="leadSaveBtn">Save Lead</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Details Modal -->
+  <div class="modal-backdrop hidden" id="viewModalBackdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Lead Details</h3>
+        <button class="modal-close" id="viewModalClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="detail-grid" id="detailGrid"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="viewCloseBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirm Modal -->
+  <div class="modal-backdrop hidden" id="confirmModalBackdrop">
+    <div class="modal" style="max-width: 420px;">
+      <div class="modal-header">
+        <h3>Delete lead</h3>
+        <button class="modal-close" id="confirmModalClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="confirm-text">Are you sure you want to delete this lead? This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="confirmCancelBtn">Cancel</button>
+        <button class="btn btn-danger" id="confirmDeleteBtn">Delete Lead</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-wrap" id="toastWrap"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
