@@ -1,2 +1,0 @@
-# lead-dashboard-assignment
-
