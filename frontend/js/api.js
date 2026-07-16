@@ -1,5 +1,5 @@
 
-const API_BASE = "http://localhost:8000/api";
+const API_BASE = "https://lead-dashboard-assignment.onrender.com/api";
 
 const Auth = {
   getToken() {
