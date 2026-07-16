@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Fute Services — Lead Dashboard</title>
-<link rel="stylesheet" href="css/style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fute Services — Lead Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
+
 <body>
   <div class="app-shell">
     <aside class="sidebar">
@@ -20,10 +22,29 @@
           <h1>Lead Dashboard</h1>
           <div class="muted">Buyer enquiries from your property listings.</div>
         </div>
-        <div class="topbar-actions">
+        <!-- <div class="topbar-actions">
           <button class="btn btn-ghost" id="exportBtn">⬇ Export CSV</button>
           <button class="btn btn-accent" id="addLeadBtn">+ Add Lead</button>
           <button class="btn btn-ghost" id="logoutBtn">Log out</button>
+        </div> -->
+        <div class="topbar-actions">
+
+          <button class="btn btn-ghost" id="themeToggle">
+            🌙 Dark
+          </button>
+
+          <button class="btn btn-ghost" id="exportBtn">
+            ⬇ Export CSV
+          </button>
+
+          <button class="btn btn-accent" id="addLeadBtn">
+            + Add Lead
+          </button>
+
+          <button class="btn btn-ghost" id="logoutBtn">
+            Log out
+          </button>
+
         </div>
       </div>
 
@@ -224,6 +245,8 @@
   <div class="toast-wrap" id="toastWrap"></div>
 
   <script src="js/api.js"></script>
+  <script src="js/theme.js"></script>
   <script src="js/dashboard.js"></script>
 </body>
+
 </html>
